@@ -29,7 +29,8 @@ export function AdminDashboard() {
       dispatch(getLoginData());
     } else if (error === "User not login") {
       navigate(redirect);
-    } /*else if (userInfo?.userType !== "Admin") {
+    }
+     /*else if (userInfo?.userType !== "Admin") {
       navigate(redirect);
     }*/
   }, [error, userInfo]);

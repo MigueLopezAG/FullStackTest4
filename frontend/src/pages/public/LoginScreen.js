@@ -46,7 +46,7 @@ const LoginScreen = () => {
       (userInfo && userInfo.userType === "Admin") ||
       (searchParams.get("username") && searchParams.get("userType") === "Admin")
     ) {
-      navigate("/admin");
+      navigate("/admin/Proveedores");
     }
     if (
       (userInfo && userInfo.userType === "Adviser") ||

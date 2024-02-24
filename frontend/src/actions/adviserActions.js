@@ -108,9 +108,6 @@ export const adminDeleteAdviser = (id) => async (dispatch) => {
       type: ADVISER_ADMIN_DELETE_SUCCESS,
       payload: data,
     });
-    dispatch({
-      type: ADVISER_ADMIN_LIST_RESET,
-    });
   } catch (error) {
     const message =
       error.response && error.response.data.message

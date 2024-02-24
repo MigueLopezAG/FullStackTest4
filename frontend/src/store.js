@@ -17,6 +17,13 @@ import {
   adminAdviserListReducer,
 } from "./reducers/adviserReducer";
 
+import {
+  createProductReducer,
+  getProductListReducer,
+  productDeleteReducer,
+  getProductReducer
+} from './reducers/productReducer'
+
 const reducers = combineReducers({
   // USER
   userLogin: userLoginReducer,
@@ -30,6 +37,12 @@ const reducers = combineReducers({
   adminAdviserUpdate: adminAdviserUpdateReducer,
   adminAdviserDelete: adminAdviserDeleteReducer,
   adminAdviserList: adminAdviserListReducer,
+
+  //PRODUCTS
+  createProduct: createProductReducer,
+  productList: getProductListReducer,
+  productDelete: productDeleteReducer,
+  productDetail: getProductReducer
 });
 
 const initialState = {

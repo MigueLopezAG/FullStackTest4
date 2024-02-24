@@ -9,12 +9,12 @@ const multer = require("multer");
 router
   .route("/")
   .get(productController.productList)
-  .post(isLoggedIn, isAdmin, productController.createProduct);
+  .post(productController.createProduct);
 
 router
-  .route("/:id")
-  //.get(productController.getProdct)
-  .put(isLoggedIn, isAdmin, productController.editProduct)
-  .delete(isLoggedIn, isAdmin, productController.deleteProduct);
+  .route("/:_id")
+  .get(productController.getProduct)
+  .put(productController.editProduct)
+  .delete(productController.deleteProduct);
 
 module.exports = router;

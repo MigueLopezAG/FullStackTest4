@@ -7,6 +7,11 @@ const orderSchema = mongoose.Schema(
         ref: 'Product',
         index: true,
     },
+    adviserRef: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
     orderStatus: {
         type: String,
         enum: ["Pendiente", "En Proceso", "Enviado", "Entregado"],
@@ -14,12 +19,15 @@ const orderSchema = mongoose.Schema(
     },
     parcelService: {
         type: String, 
-        trim: true 
+        //trim: true 
     },
     trackingNumber: {
-        type: Number,
-        trim: true, 
-        default: 0 
+        type: String,
+        //trim: true,  
+    },
+    deleted: {
+      type: Boolean,
+      default: false
     }
   },
   {

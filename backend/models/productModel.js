@@ -4,7 +4,7 @@ const productSchema = mongoose.Schema(
   {
     name: {
         type: String,
-        trim: true,
+        //trim: true,
         unique: true
     },
     adviserRef: {
@@ -12,18 +12,18 @@ const productSchema = mongoose.Schema(
         ref: 'User',
         index: true,
     },
-    image: { 
-        url: String, 
-        filename: String, 
-        trim: true 
-    },
+    // image: { 
+    //     url: String, 
+    //     filename: String, 
+    //    // trim: true 
+    // },
     category: { 
         type: String, 
-        trim: true 
+        //trim: true 
     },
     description: { 
         type: String, 
-        trim: true 
+       // trim: true 
     },
     price: { 
         type: Number, 

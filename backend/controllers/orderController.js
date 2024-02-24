@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const Order = require("../models/orderModel");
+const User = require("../models/userModel");
 
 dotenv.config();
 
@@ -38,10 +39,11 @@ module.exports.getOrder = asyncHandler(async (req, res) => {
 
 module.exports.createOrder = asyncHandler(async (req, res) => {
     try{
-        const newOrder = new Product({
-            productRef: '',
-            parcelService: '',
-            trackingNumber: ''
+        const productInfo = await Product.findById(req.body.productRef);
+        const adviserInfo = await User.findById(productInfo.adviserRef);
+        const newOrder = new Order({
+            productRef: req.body.productRef,
+            adviserRef: adviserInfo._id
         })
         await newOrder.save()
         res.status(200).json({ message: "Order created", newOrder });
@@ -53,7 +55,7 @@ module.exports.createOrder = asyncHandler(async (req, res) => {
 
 module.exports.deleteOrder = asyncHandler(async (req, res) => {
     try{
-        const order = await Order.findById(req.params.id);
+        const order = await Order.findById(req.params._id);
         order.deleted = true;
         await order.save();
         res.status(200).json({ message: "Order deleted" });
@@ -63,17 +65,23 @@ module.exports.deleteOrder = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports.editOrder = asyncHandler(async (req, res) => {
+module.exports.editOrder = asyncHandler((req, res) => {
+    const { orderInfo } = req.body;
     try{
-        const order = await Order.findById(req.params.id);
-            order.productRef = '';
-            order.orderStatus =  '';
-            order.parcelService = '';
-            order.trackingNumber = '';
-        await order.save();
-        res.status(200).json({ message: "Order updated", order });
-    } catch(err) {
+        Order.findById(req.params._id).then(order => {
+            if(order) {
+                order.orderStatus =  orderInfo.orderStatus;
+                order.parcelService = orderInfo.parcelService;
+                order.trackingNumber = orderInfo.trackingNumber;
+                order.save();
+                return res.status(200).json({ message: "Order updated", order });
+            } else {
+                return res.status(400).json({ message: "No se encontro la orden a modificar"})
+            }
+        });
+    }catch(err){
         console.log("Error", err)
-        res.status(500).json({message: "Ocurrio un error en el servidor"})
+        return res.status(500).json({message: "Ocurrio un error en el servidor"})
     }
+    
 });

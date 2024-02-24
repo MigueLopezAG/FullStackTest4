@@ -100,7 +100,7 @@ export function AdviserCreate() {
   useEffect(() => {
     if (messageCreateAdviser) {
       dispatch({ type: ADVISER_ADMIN_CREATE_RESET });
-      navigate("/admin/asesores");
+      navigate("/admin/Proveedores");
     }
     if (!userInfo) {
       dispatch(getLoginData());

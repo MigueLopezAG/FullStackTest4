@@ -1,5 +1,5 @@
-import { UserGroupIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import { AdviserList, AdviserCreate, AdviserEdit } from "./pages/user/admin";
+import { UserGroupIcon, BuildingStorefrontIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { AdviserList, AdviserCreate, AdviserEdit, Createproduct, ProductList } from "./pages/user/admin";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -42,6 +42,35 @@ export const routes = [
             name: "Eliminar",
             path: "/:id/eliminar",
             element: <AdviserList />,
+            hide: true,
+          },
+        ],
+      },
+      {
+        icon: <BuildingStorefrontIcon {...icon} />,
+        name: "Productos",
+        path: "/Productos",
+        isList: true,
+        element: <ProductList />,
+        subpages: [
+          {
+            icon: <PlusCircleIcon {...icon} />,
+            name: "Crear",
+            path: "/crear",
+            element: <Createproduct />,
+          },
+          {
+            icon: <UserGroupIcon {...icon} />,
+            name: "Editar",
+            path: "/:id/editar",
+            element: <Createproduct />,
+            hide: true,
+          },
+          {
+            icon: <BuildingStorefrontIcon {...icon} />,
+            name: "Eliminar",
+            path: "/:id/eliminar",
+            element: <ProductList />,
             hide: true,
           },
         ],

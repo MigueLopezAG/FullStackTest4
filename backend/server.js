@@ -14,7 +14,7 @@ const { connectDB } = require("./config/db");
 const User = require("./models/userModel");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const orderRoutes = require("./routes/orderRoutes");
+const orderRoutes = require("./routes/ordersRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
