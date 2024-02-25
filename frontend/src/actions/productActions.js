@@ -12,7 +12,11 @@ import {
     PRODUCT_DELETE_SUCCESS,    
     GET_PRODUCT_REQUEST,
     GET_PRODUCT_SUCCESS,
-    GET_PRODUCT_FAIL
+    GET_PRODUCT_FAIL,
+    EDIT_PRODUCT_REQUEST,
+    EDIT_PRODUCT_SUCCESS,
+    EDIT_PRODUCT_RESET,
+    EDIT_PRODUCT_FAIL
 } from '../constants/productConstans'
 
 export const createProductAction = (productInfo) => async (dispatch) => {
@@ -46,6 +50,39 @@ export const createProductAction = (productInfo) => async (dispatch) => {
                 : error.response,
         });
     }
+}
+
+export const editProductAction = (productRef, productInfo) => async (dispatch) => {
+  try{
+      dispatch({
+          type: EDIT_PRODUCT_REQUEST
+      });
+      const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+      };
+      const { data } = await axios.post(
+          "/api/products/" + productRef,
+          { productInfo },
+          config
+      );
+      dispatch({
+          type: EDIT_PRODUCT_SUCCESS,
+          payload: data,
+      });
+      dispatch({
+          type: EDIT_PRODUCT_RESET,
+      });
+  } catch (error) {
+      dispatch({
+          type: EDIT_PRODUCT_FAIL,
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.response,
+      });
+  }
 }
 
 export const getProductList = () => async (dispatch) => {

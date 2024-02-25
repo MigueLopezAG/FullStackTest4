@@ -1,5 +1,19 @@
-import { UserGroupIcon, BuildingStorefrontIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import { AdviserList, AdviserCreate, AdviserEdit, Createproduct, ProductList } from "./pages/user/admin";
+import { 
+  UserGroupIcon, 
+  BuildingStorefrontIcon, 
+  PlusCircleIcon, 
+  InboxArrowDownIcon, 
+  PencilSquareIcon 
+} from "@heroicons/react/24/solid";
+import { 
+  AdviserList,
+  AdviserCreate, 
+  AdviserEdit, 
+  CreateProduct, 
+  ProductList,
+  OrderList,
+  EditOrder
+} from "./pages/user/admin";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -57,13 +71,13 @@ export const routes = [
             icon: <PlusCircleIcon {...icon} />,
             name: "Crear",
             path: "/crear",
-            element: <Createproduct />,
+            element: <CreateProduct />,
           },
           {
             icon: <UserGroupIcon {...icon} />,
             name: "Editar",
             path: "/:id/editar",
-            element: <Createproduct />,
+            element: <CreateProduct />,
             hide: true,
           },
           {
@@ -75,8 +89,31 @@ export const routes = [
           },
         ],
       },
-    ],
-  },
+      {
+        icon: <InboxArrowDownIcon {...icon} />,
+        name: "Ordenes",
+        path: "/Ordenes",
+        isList: true,
+        element: <OrderList />,
+        subpages: [
+          {
+            icon: <PencilSquareIcon {...icon} />,
+            name: "Editar",
+            path: "/:id/editar",
+            element: <EditOrder />,
+            hide: true
+          },
+          {
+            icon: <BuildingStorefrontIcon {...icon} />,
+            name: "Eliminar",
+            path: "/:id/eliminar",
+            element: <OrderList />,
+            hide: true,
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 export default routes;

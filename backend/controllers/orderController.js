@@ -9,7 +9,12 @@ dotenv.config();
 //PRODUCT CRUD
 module.exports.orderList = asyncHandler(async (req, res) => {
     try{
-        const orders = await Order.find({productRef: req.body.productRef})
+        let orders;
+        if(req.params.userType === "Admin"){
+            orders = await Order.find({deleted: false});
+        } else {
+            orders = await Order.find({adviserRef: req.params.userType, deleted: false})
+        }
         if(orders){
             res.status(200).json({ orders });
         } else {
@@ -26,7 +31,7 @@ module.exports.getOrder = asyncHandler(async (req, res) => {
     try{
         Order.findById(req.params._id).then((order) =>{
             if(order){
-                res.status(200).json(order)
+                res.status(200).json({order})
             } else {
                 res.status(400).json({message: "No se encontro información de la orden"})
             }

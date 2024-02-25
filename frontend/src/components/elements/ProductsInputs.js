@@ -166,4 +166,46 @@ export const InputSelectAdvisers = ({
       </select>
     </div>
   );
+};  
+export const InputSelectStatus = ({
+  title,
+  type,
+  name,
+  required,
+  placeholder,
+  classInput,
+  classDiv,
+  classSpan,
+  value,
+  setValue,
+  orderStatus,
+  firstValue
+}) => {
+  return (
+    <div className={"flex flex-col gap-2 " + classDiv}>
+      <div className="flex items-center justify-between">
+        <span className={"flex font-medium  " + classSpan}>{title}:</span>
+
+      </div>
+
+      <select
+        type={type}
+        name={name}
+        required={required}
+        placeholder={placeholder}
+        value={value}
+        onChange={setValue}
+        className={
+          "focus:border-palette-primary rounded-md border-2 p-2 outline-none" +
+          classInput
+        }
+      >
+        {  orderStatus.length !== 0 &&
+          orderStatus.map((status, index) => {
+            return <option value={status} key={index}>{status}</option>
+          })
+        }
+      </select>
+    </div>
+  );
 };

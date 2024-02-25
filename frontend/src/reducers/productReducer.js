@@ -17,7 +17,12 @@ import {
   GET_PRODUCT_REQUEST,
   GET_PRODUCT_SUCCESS,
   GET_PRODUCT_FAIL,
-  GET_PRODUCT_RESET
+  GET_PRODUCT_RESET,
+
+  EDIT_PRODUCT_REQUEST,
+  EDIT_PRODUCT_SUCCESS,
+  EDIT_PRODUCT_FAIL,
+  EDIT_PRODUCT_RESET
 } from '../constants/productConstans'
 
 export const createProductReducer = (state = {}, action) => {
@@ -34,6 +39,22 @@ export const createProductReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const editProductReducer = (state = {}, action) => {
+  switch (action.type) {
+    case EDIT_PRODUCT_REQUEST:
+      return { loading: true };
+    case EDIT_PRODUCT_SUCCESS:
+      return { loading: false, message: action.payload.message };
+    case EDIT_PRODUCT_FAIL:
+      return { loading: false, error: action.payload };
+    case EDIT_PRODUCT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
 
 export const getProductListReducer = (state = {}, action) => {
   switch (action.type) {

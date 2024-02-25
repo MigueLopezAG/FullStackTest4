@@ -5,3 +5,7 @@ export function findAdviserNameById(advisers = [], id) {
 export function findProductNameById(products = [], id) {
   return products.filter((product) => product._id == id).length !== 0 ? products.filter((product) => product._id == id)[0].name  : ''
 }
+
+export function findProductPriceById(products = [], id) {
+  return products.filter((product) => product._id == id).length !== 0 ? products.filter((product) => product._id == id)[0].price  : ''
+}

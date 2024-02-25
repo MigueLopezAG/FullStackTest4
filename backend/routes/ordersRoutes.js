@@ -6,8 +6,11 @@ const multer = require("multer");
 
 //Order Routes
 router
-  .route("/")
+  .route("/orderList/:userType")
   .get(orderController.orderList)
+  
+router
+  .route("/")
   .post(orderController.createOrder)
 
 router

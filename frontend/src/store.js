@@ -21,14 +21,16 @@ import {
   createProductReducer,
   getProductListReducer,
   productDeleteReducer,
-  getProductReducer
+  getProductReducer,
+  editProductReducer
 } from './reducers/productReducer'
 
 import {
   createOrderReducer,
   getOrderListReducer,
   orderDeleteReducer,
-  getOrderReducer
+  getOrderReducer,
+  editOrderReducer
 } from './reducers/orderReducer'
 
 const reducers = combineReducers({
@@ -47,12 +49,14 @@ const reducers = combineReducers({
 
   //PRODUCTS
   createProduct: createProductReducer,
+  editProduct: editProductReducer,
   productList: getProductListReducer,
   productDelete: productDeleteReducer,
   productDetail: getProductReducer,
 
   //ORDERS
   createOrder: createOrderReducer,
+  editOrder: editOrderReducer,
   orderList: getOrderListReducer,
   orderDelete: orderDeleteReducer,
   orderDetail: getOrderReducer

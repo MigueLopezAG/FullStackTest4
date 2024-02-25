@@ -12,7 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { useMaterialTailwindController } from "../../../../context";
 
-export function Createproduct() {
+export function CreateProduct() {
     const { id } = useParams();
     const isEdit = id ? true : false
     
@@ -225,4 +225,4 @@ export function Createproduct() {
     );
 }
 
-export default Createproduct;
+export default CreateProduct;

@@ -9,17 +9,22 @@ import {
   Typography
 } from "@material-tailwind/react";
 import Loader from "../../../../components/Loader";
-import {
-  PRODUCT_DELETE_RESET
-} from "../../../../constants/productConstans";
-import { findAdviserNameById } from "../../../../actions/helpers";
+import { findAdviserNameById, findProductPriceById, findProductNameById } from "../../../../actions/helpers";
+
 import { adminListAdvisers } from "../../../../actions/adviserActions";
+import { getOrderList } from "../../../../actions/orderActions";
 import { getProductList } from "../../../../actions/productActions";
 import Delete from "./Delete";
+import { ORDER_DELETE_RESET } from "../../../../constants/orderConstants";
 
-export function ProductList() {
+export function OrderList() {
 
   const [viewModal, setViewModal] = useState(false);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    userInfo,
+  } = userLogin;
 
   const productList = useSelector((state) => state.productList);
   const {
@@ -27,9 +32,17 @@ export function ProductList() {
     error: errorProducts,
     products,
   } = productList;
+
+  const orderList = useSelector((state) => state.orderList);
+  const {
+    loading: loadingOrders,
+    error: errorOrder,
+    orders,
+  } = orderList;
   
   const adminAdviserList = useSelector((state) => state.adminAdviserList);
   const { advisers } = adminAdviserList;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -40,7 +53,6 @@ export function ProductList() {
   }, [])
   
   useEffect(() => {
-
     if (id) {
       var link = document.location.href.split("/");
       if (link[link.length - 1] === "eliminar") {
@@ -49,11 +61,21 @@ export function ProductList() {
     } else {
       setViewModal(false);
       dispatch({
-        type: PRODUCT_DELETE_RESET,
+        type: ORDER_DELETE_RESET,
       });
     }
+  }, [orders, id]);
 
-  }, [products, id]);
+  useEffect(() => {
+    if(userInfo){
+        if(userInfo.userType === 'Admin'){
+            dispatch(getOrderList(userInfo.userType));
+        } else {
+            dispatch(getOrderList(userInfo.id))
+        }
+    }
+  }, [userInfo])
+  
 
   const actionOpenDeleteModal = () => {
     setViewModal("delete");
@@ -67,20 +89,12 @@ export function ProductList() {
         <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
           <div className="flex items-center">
             <Typography variant="h6" color="white">
-              Productos
+              Ordenes
             </Typography>
-
-            <div className="flex w-full flex-wrap items-center justify-end  gap-3">
-              <Link to="/admin/Productos/crear" className="justify-end">
-                <Button variant="gradient" color="white">
-                  Crear
-                </Button>
-              </Link>
-            </div>
           </div>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          {loadingProducts ? (
+          {loadingProducts || loadingOrders ? (
             <div className="flex w-full justify-center">
               <Loader />
             </div>
@@ -89,7 +103,7 @@ export function ProductList() {
               <table className="w-full min-w-[640px] table-auto">
                 <thead>
                   <tr>
-                    {["Nombre", "Categoria", "Proveedor", "Precio", ""].map((el) => (
+                    {["Orden ID", "Producto", "Proveedor", "Precio", ""].map((el) => (
                       <th
                         key={el}
                         className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -106,14 +120,12 @@ export function ProductList() {
                 </thead>
 
                 <tbody>
-                  {products?.map(
+                  {orders?.map(
                     (
                       {
                         _id,
-                        name,
-                        category,
-                        adviserRef,
-                        price
+                        productRef,
+                        adviserRef
                       },
                       key
                     ) => {
@@ -123,7 +135,7 @@ export function ProductList() {
                           : "border-b border-blue-gray-50"
                       }`;
                       return (
-                        <tr key={name}>
+                        <tr key={_id}>
                           <td className={className}>
                             <div className="flex items-center gap-4">
                               <div>
@@ -132,7 +144,7 @@ export function ProductList() {
                                   color="blue-gray"
                                   className="font-semibold"
                                 >
-                                  {name}
+                                  {_id}
                                 </Typography>
                               </div>
                             </div>
@@ -145,7 +157,7 @@ export function ProductList() {
                                   color="blue-gray"
                                   className="font-semibold"
                                 >
-                                  {category ? category : ""}
+                                  {productRef ? findProductNameById(products, productRef) : ""}
                                 </Typography>
                               </div>
                             </div>
@@ -171,14 +183,14 @@ export function ProductList() {
                                   color="blue-gray"
                                   className="font-semibold"
                                 >
-                                  {price ? "$ "+ price : ""}
+                                  {productRef ? "$ "+ findProductPriceById(products, productRef).toFixed(2) : 0}
                                 </Typography>
                               </div>
                             </div>
                           </td>
 
                           <td className={className}>
-                            <Link to={`/admin/Productos/${_id}/editar`}>
+                            <Link to={`/admin/Ordenes/${_id}/editar`}>
                               <Typography
                                 as="a"
                                 href="#"
@@ -187,14 +199,16 @@ export function ProductList() {
                                 Editar
                               </Typography>
                             </Link>
-                            <Link to={`/admin/Productos/${_id}/eliminar`}>
-                              <Typography
-                                as="a"
-                                className="text-xs font-semibold text-blue-gray-600 hover:text-red-500"
-                              >
-                                Eliminar
-                              </Typography>
-                            </Link>
+                            {   userInfo.userType === 'Admin' &&
+                                <Link to={`/admin/Order/${_id}/eliminar`}>
+                                <Typography
+                                    as="a"
+                                    className="text-xs font-semibold text-blue-gray-600 hover:text-red-500"
+                                >
+                                    Eliminar
+                                </Typography>
+                                </Link>
+                            }
                           </td>
                         </tr>
                       );
@@ -210,4 +224,4 @@ export function ProductList() {
   );
 }
 
-export default ProductList;
+export default OrderList;
