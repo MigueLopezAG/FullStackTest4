@@ -34,7 +34,6 @@ export function ProductList() {
   
   const adminAdviserList = useSelector((state) => state.adminAdviserList);
   const { advisers } = adminAdviserList;
-  console.log("advisers", advisers)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();

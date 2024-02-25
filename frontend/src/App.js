@@ -6,6 +6,8 @@ import Footer from "./components/Footer";
 // Public
 import LoginScreen from "./pages/public/LoginScreen";
 import NotFound from "./pages/public/NotFound";
+import Shop from "./pages/public/Shop";
+import ProductDetail from "./pages/public/ProductDetail";
 // Dashboard
 import { AdminDashboard, AdviserDashboard } from "./layouts";
 const App = () => {
@@ -13,7 +15,8 @@ const App = () => {
     <main className="bg-[#F5F4F2]">
       <Router>
         <Routes>
-          <Route path="/" element={<LoginScreen />} exact />
+          <Route path="/" element={<Shop />} exact />
+          <Route path="/productDetail/:id" element={<ProductDetail />} exact />
           <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="/adviser/*" element={<AdviserDashboard />} />
           <Route path="/login" element={<LoginScreen />} exact />

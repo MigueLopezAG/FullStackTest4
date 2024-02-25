@@ -8,27 +8,14 @@ import { Input, InputFile, InputSelectAdvisers } from "../../../../components/el
 import Alert from "../../../../components/alerts/Alert";
 import { PRODUCT_CREATE_RESET } from "../../../../constants/productConstans";
 import {
-    Avatar,
     Button,
-    IconButton,
-    Typography,
-    Card,
-    List,
-    ListItem,
-    ListItemPrefix,
-    ListItemSuffix,
-    Chip,
-    Accordion,
-    AccordionHeader,
-    AccordionBody,
-    Switch,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController } from "../../../../context";
 
 export function Createproduct() {
     const { id } = useParams();
     const isEdit = id ? true : false
-    console.log("isEdit", isEdit)
+    
     const [product, setProduct] = useState({
         name: "",
         adviser: "",

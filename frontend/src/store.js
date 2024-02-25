@@ -24,6 +24,13 @@ import {
   getProductReducer
 } from './reducers/productReducer'
 
+import {
+  createOrderReducer,
+  getOrderListReducer,
+  orderDeleteReducer,
+  getOrderReducer
+} from './reducers/orderReducer'
+
 const reducers = combineReducers({
   // USER
   userLogin: userLoginReducer,
@@ -42,7 +49,13 @@ const reducers = combineReducers({
   createProduct: createProductReducer,
   productList: getProductListReducer,
   productDelete: productDeleteReducer,
-  productDetail: getProductReducer
+  productDetail: getProductReducer,
+
+  //ORDERS
+  createOrder: createOrderReducer,
+  orderList: getOrderListReducer,
+  orderDelete: orderDeleteReducer,
+  orderDetail: getOrderReducer
 });
 
 const initialState = {

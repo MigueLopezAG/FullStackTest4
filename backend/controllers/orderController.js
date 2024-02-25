@@ -39,11 +39,9 @@ module.exports.getOrder = asyncHandler(async (req, res) => {
 
 module.exports.createOrder = asyncHandler(async (req, res) => {
     try{
-        const productInfo = await Product.findById(req.body.productRef);
-        const adviserInfo = await User.findById(productInfo.adviserRef);
         const newOrder = new Order({
             productRef: req.body.productRef,
-            adviserRef: adviserInfo._id
+            adviserRef: req.body.adviserRef
         })
         await newOrder.save()
         res.status(200).json({ message: "Order created", newOrder });
