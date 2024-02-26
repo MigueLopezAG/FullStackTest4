@@ -166,8 +166,6 @@ export function CreateProduct() {
         })
       }
     }, [advisers])
-    
-    
 
     return (
         <div className="bg-slate-50 p-4">

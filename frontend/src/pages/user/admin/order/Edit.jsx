@@ -47,12 +47,12 @@ export function EditOrder() {
         error: errorOrderDetail,
         order: orderInfo
     } = orderDetail;
+
     const adminAdviserList = useSelector((state) => state.adminAdviserList);
     const { advisers } = adminAdviserList;
 
     const productList = useSelector((state) => state.productList);
     const { products } = productList;
-
     const handleChange = (e) =>
         setOrder((prevState) => ({
             ...prevState,
@@ -91,7 +91,6 @@ export function EditOrder() {
       dispatch({type: GET_ORDER_RESET})
     }, [])
     
-
     useEffect(() => {
         if(id){
             dispatch(getOrderAction(id))
