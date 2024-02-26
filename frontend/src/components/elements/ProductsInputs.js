@@ -45,8 +45,11 @@ export const InputFile = ({
   name,
   title,
   required,
-  setValue
+  setValue,
+  removeImage,
+  url
 }) => {
+  
     const [fileValue, setFileValue] = useState(null);
     const inputReference = useRef();
     const buttonRef = useRef();
@@ -73,21 +76,28 @@ export const InputFile = ({
             }}
             required={required}
           />
-          {fileValue !== null ? (
+          {fileValue !== null || url !== '' ? (
             <>
               <button
                 onClick={() => {
                   setFileValue(null);
                   setValue(null);
+                  removeImage();
                 }}
                 type="button"
                 className="aspect-square absolute top-1  right-1 z-10 rounded-sm bg-red-300 py-1 px-2 text-lg text-white drop-shadow-lg hover:bg-red-500"
               >
                 X
               </button>
-              {fileValue.type.includes("image") ? (
+              {url !== '' ? (
                 <img
-                  src={URL.createObjectURL(fileValue)}
+                  src={url}
+                  alt="preview"
+                  className="aspect-square w-full object-contain"
+                />
+              ) : fileValue.type.includes("image") ? (
+                <img
+                  src={url !== '' ? url :URL.createObjectURL(fileValue)}
                   alt="preview"
                   className="aspect-square w-full object-contain"
                 />
@@ -136,8 +146,7 @@ export const InputSelectAdvisers = ({
   classSpan,
   value,
   setValue,
-  advisers,
-  firstValue
+  advisers
 }) => {
   return (
     <div className={"flex flex-col gap-2 " + classDiv}>
@@ -151,8 +160,9 @@ export const InputSelectAdvisers = ({
         name={name}
         required={required}
         placeholder={placeholder}
-        value={value === '' ? firstValue._id : value}
+        value={value}
         onChange={setValue}
+        defaultValue={''}
         className={
           "focus:border-palette-primary rounded-md border-2 p-2 outline-none" +
           classInput

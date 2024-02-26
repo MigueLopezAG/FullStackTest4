@@ -8,6 +8,7 @@ import {
   CardBody,
   Typography
 } from "@material-tailwind/react";
+import SuccessAlert from '../../../../components/alerts/SuccessAlert'
 import Loader from "../../../../components/Loader";
 import { findAdviserNameById, findProductPriceById, findProductNameById } from "../../../../actions/helpers";
 
@@ -15,7 +16,7 @@ import { adminListAdvisers } from "../../../../actions/adviserActions";
 import { getOrderList } from "../../../../actions/orderActions";
 import { getProductList } from "../../../../actions/productActions";
 import Delete from "./Delete";
-import { ORDER_DELETE_RESET } from "../../../../constants/orderConstants";
+import { ORDER_DELETE_RESET, GET_ORDER_RESET } from "../../../../constants/orderConstants";
 
 export function OrderList() {
 
@@ -39,6 +40,12 @@ export function OrderList() {
     error: errorOrder,
     orders,
   } = orderList;
+
+  const editOrder = useSelector((state) => state.editOrder);
+  const { message: editOrderMessage } = editOrder;
+
+  const orderDelete = useSelector((state) => state.orderDelete);
+  const { message: deleteOrderMessage } = orderDelete;
   
   const adminAdviserList = useSelector((state) => state.adminAdviserList);
   const { advisers } = adminAdviserList;
@@ -50,7 +57,16 @@ export function OrderList() {
   useEffect(() => {
     dispatch(adminListAdvisers());
     dispatch(getProductList());
+    dispatch({type: GET_ORDER_RESET})
   }, [])
+
+  useEffect(() => {
+    if(editOrderMessage) {
+      dispatch(adminListAdvisers());
+      dispatch(getProductList());
+      dispatch({type: ORDER_DELETE_RESET});
+    }
+  }, [editOrderMessage])
   
   useEffect(() => {
     if (id) {
@@ -66,6 +82,7 @@ export function OrderList() {
     }
   }, [orders, id]);
 
+  const redirect = "/login";
   useEffect(() => {
     if(userInfo){
         if(userInfo.userType === 'Admin'){
@@ -73,6 +90,8 @@ export function OrderList() {
         } else {
             dispatch(getOrderList(userInfo.id))
         }
+    } else {
+      navigate(redirect);
     }
   }, [userInfo])
   
@@ -170,7 +189,7 @@ export function OrderList() {
                                   color="blue-gray"
                                   className="font-semibold"
                                 >
-                                  {adviserRef ? findAdviserNameById(advisers, adviserRef): ""}
+                                  {userInfo.userType === 'Adviser' ? userInfo.tradename : findAdviserNameById(advisers, adviserRef) }
                                 </Typography>
                               </div>
                             </div>
@@ -183,7 +202,7 @@ export function OrderList() {
                                   color="blue-gray"
                                   className="font-semibold"
                                 >
-                                  {productRef ? "$ "+ findProductPriceById(products, productRef).toFixed(2) : 0}
+                                  {productRef ? "$ "+ findProductPriceById(products, productRef) : 0}
                                 </Typography>
                               </div>
                             </div>
@@ -220,6 +239,11 @@ export function OrderList() {
           )}
         </CardBody>
       </Card>
+      {editOrderMessage && (
+        <SuccessAlert
+          title={"Producto Editado Exitosamente"}
+        />
+      )}
     </div>
   );
 }

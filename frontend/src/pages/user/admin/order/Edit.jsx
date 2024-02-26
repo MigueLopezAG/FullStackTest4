@@ -6,7 +6,7 @@ import { Input, InputSelectStatus } from "../../../../components/elements/Produc
 
 import { findAdviserNameById, findProductPriceById, findProductNameById } from "../../../../actions/helpers";
 import Alert from "../../../../components/alerts/Alert";
-import { EDIT_ORDER_RESET } from "../../../../constants/orderConstants";
+import { EDIT_ORDER_RESET, GET_ORDER_RESET } from "../../../../constants/orderConstants";
 import { Button } from "@material-tailwind/react";
 import { useMaterialTailwindController } from "../../../../context";
 import { getOrderAction, editOrderAction } from "../../../../actions/orderActions";
@@ -38,15 +38,14 @@ export function EditOrder() {
     const {
         loading: loadingEditOrder,
         error: errorEditOrder,
-        message: messageEditError,
+        message: messageEdit,
     } = editOrder;
 
     const orderDetail = useSelector((state) => state.orderDetail);
     const {
         loading: loadingOrderDetail,
         error: errorOrderDetail,
-        order: orderInfo,
-        message: messageOrderDetail,
+        order: orderInfo
     } = orderDetail;
     const adminAdviserList = useSelector((state) => state.adminAdviserList);
     const { advisers } = adminAdviserList;
@@ -69,7 +68,7 @@ export function EditOrder() {
     const handleChangeSelect = (e) => {
         setOrder((prevState) => ({
             ...prevState,
-            adviser: e.target.value
+            orderStatus: e.target.value
         }));
     }
 
@@ -79,16 +78,19 @@ export function EditOrder() {
     const redirect = "/login";
     //Validar la sesion del usuario y controlar la redireccion
     useEffect(() => {
-        if (messageEditError) {
+        if (messageEdit) {
             dispatch({ type: EDIT_ORDER_RESET });
-            navigate("/admin/Order");
+            navigate("/adviser/Ordenes");
         }
         if (!userInfo) {
             dispatch(getLoginData());
-        } else if (userInfo.userType !== "Admin") {
-            navigate(redirect);
         }
-    }, [userInfo, messageEditError]);
+    }, [userInfo, messageEdit]);
+
+    useEffect(() => {
+      dispatch({type: GET_ORDER_RESET})
+    }, [])
+    
 
     useEffect(() => {
         if(id){
@@ -99,7 +101,6 @@ export function EditOrder() {
     }, [id])
     
     useEffect(() => {
-        console.log("orderInfo", orderInfo)
       if(orderInfo ) {
         setOrder({
             productRef: orderInfo.productRef,
@@ -111,23 +112,22 @@ export function EditOrder() {
       }
     }, [orderInfo])
     
-    useEffect(() => {
-      console.log("order", order)
-    }, [order])
-    
-
-    return (
+    return orderInfo && (
         <div className="bg-slate-50 p-4">
             <h2 className="text-palette-primary text-xl font-bold">Editar Orden</h2>
-            <div className="flex flex-row justify-between mt-6">
-                <h2 className="text-palette-primary text-xl font-bold">Proveedor:</h2>
-                <h2 className="text-palette-primary text-xl font-bold">Producto:</h2>
-                <h2 className="text-palette-primary text-xl font-bold">Precio:</h2>
-            </div>
-            <div className="flex flex-row justify-between mt-2 mb-4">
-                <h2 className="text-palette-primary text-xl font-bold">{order.adviserRef ? findAdviserNameById(advisers, order.adviserRef): ""}</h2>
-                <h2 className="text-palette-primary text-xl font-bold">{order.productRef ? findProductNameById(products, order.productRef) : ""}</h2>
-                <h2 className="text-palette-primary text-xl font-bold">{order.productRef ? "$ "+ findProductPriceById(products, order.productRef) : 0}</h2>
+            <div className="flex flex-row justify-between mt-6 mb-2">
+                <div className="flex flex-col mb-2">
+                    <h2 className="text-palette-primary text-xl font-bold">Proveedor:</h2>
+                    <h2 className="text-palette-primary text-xl ">{userInfo.userType === 'Adviser' ? userInfo.tradename : findAdviserNameById(advisers, orderInfo.adviserRef)}</h2>
+                </div>
+                <div className="flex flex-col mb-2">    
+                    <h2 className="text-palette-primary text-xl font-bold">Producto:</h2>
+                    <h2 className="text-palette-primary text-xl">{orderInfo.productRef ? findProductNameById(products, orderInfo.productRef) : ""}</h2>
+                </div>
+                <div className="flex flex-col mb-2">
+                    <h2 className="text-palette-primary text-xl font-bold">Precio:</h2>
+                    <h2 className="text-palette-primary text-xl ">{order.productRef ? "$ "+ findProductPriceById(products, orderInfo.productRef) : 0}</h2>
+                </div>
             </div>
             <form
                 className="mt-3 grid gap-6 md:grid-cols-2"

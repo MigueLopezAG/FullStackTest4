@@ -38,9 +38,6 @@ export const createOrderAction = (orderInfo) => async (dispatch) => {
             type: ORDER_CREATE_SUCCESS,
             payload: data,
         });
-        dispatch({
-            type: ORDER_CREATE_RESET,
-        });
     } catch (error) {
         dispatch({
             type: ORDER_CREATE_FAIL,
@@ -70,9 +67,6 @@ export const editOrderAction = (orderRef, orderInfo) => async (dispatch) => {
       dispatch({
           type: EDIT_ORDER_SUCCESS,
           payload: data,
-      });
-      dispatch({
-          type: EDIT_ORDER_RESET,
       });
   } catch (error) {
       dispatch({

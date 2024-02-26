@@ -4,10 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getProductAction } from '../../actions/productActions';
 import Header from '../../components/shop/Header';
 import Loader from '../../components/Loader';
-import { Buffer } from 'buffer';
-import axios from 'axios';
-import { Typography, Button } from '@material-tailwind/react';
+import SuccessAlert from "../../components/alerts/SuccessAlert";
+import { ORDER_CREATE_RESET } from '../../constants/orderConstants';
 import { createOrderAction } from '../../actions/orderActions';
+import {
+    Button,
+    Typography
+  } from "@material-tailwind/react";
 
 const ProductDetail = () => {
 
@@ -18,38 +21,33 @@ const ProductDetail = () => {
     const productDetail = useSelector((state) => state.productDetail);
     const {
         loading: loadingProductDetail,
-        product: productInfo,
+        product: productInfo
     } = productDetail;
-    
-    const [image, setImage] = useState('')
+
+    const createOrderInfo = useSelector((state) => state.createOrder);
+    const {
+        loading: loadingCreateOrder,
+        message: createOrderMessage
+    } = createOrderInfo;
+
+    const createOrder = () => {
+        dispatch(createOrderAction({
+            productRef: productInfo[0]._id,
+            adviserRef: productInfo[0].adviserRef
+        }))
+    }
 
     useEffect(() => {
         if (id) {
+            dispatch({type: ORDER_CREATE_RESET})
             dispatch(getProductAction(id))
         }
     }, [id])
 
-    // const getImage = async () => {
-    //     axios.get(currentProduct.image, { responseType: "arraybuffer" })
-    //         .then((response) =>
-    //             setImage(Buffer.from(response.data, "binary").toString("base64"))
-    //         ).catch((err) => {
-    //             console.log("ocurrio un error al cargar la imagen", err)
-    //         });
-    // }
-    // getImage();
-
-    const createOrder = () => {
-        dispatch(createOrderAction({
-          productRef: productInfo[0]._id,
-          adviserRef: productInfo[0].adviserRef
-        }))
-      }
-
     return (
         <>
             <Header />
-            {loadingProductDetail || !productInfo ?
+            {loadingProductDetail || loadingCreateOrder || !productInfo ?
                 (
                     <div className="flex w-full justify-center">
                         <Loader />
@@ -61,41 +59,36 @@ const ProductDetail = () => {
                                 <div className="w-full px-4 mb-8 md:w-1/2 md:mb-0">
                                     <div className="sticky top-0 overflow-hidden ">
                                         <div className="relative mb-6 lg:mb-10 lg:h-96">
-                                            <img className="object-contain w-full lg:h-full" src={`data:;base64,${image}`} alt={''} />
+                                            <img className="object-cover w-full h-full" src={productInfo[0].image.url} alt={productInfo[0].name} />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="w-full px-4 md:w-1/2">
                                     <div className="lg:pl-20">
                                         <div className="mb-6 text-center">
-                                            <Typography className="mt-6 mb-6 text-4xl font-semibold  tracking-wide text-gray-700 md:text-2xl">
-                                                {productInfo[0].name}
-                                            </Typography>
-                                            <Typography className="inline-block text-4xl font-semibold text-gray-700">
-                                                <span>${' '}{productInfo[0].price.toFixed(2)}</span>
-                                            </Typography>
+                                            <h1 className="mt-6 mb-4 text-4xl font-bold text-gray-800 md:text-3xl">{productInfo[0].name}</h1>
+                                            <p className="text-3xl font-semibold text-gray-700">${productInfo[0].price.toFixed(2)}</p>
                                         </div>
-                                        <div className="mb-6 text">
-                                            <Typography className="max-w-l mt-6 mb-6 text-l leading-loose tracking-wide text-gray-700 md:text-xl">
-                                                {productInfo[0].category}
-                                            </Typography>
-                                            <Typography className="max-w-xl mt-6 mb-6 text-xl leading-loose tracking-wide text-gray-700 md:text-2xl">
-                                                {productInfo[0].description}
-                                            </Typography>
-                                            
-                                            <div className="flex gap-4 mb-6">
+                                        <div className="mb-6">
+                                            <p className="max-w-lg mt-6 mb-4 text-lg leading-relaxed text-gray-700">{productInfo[0].category}</p>
+                                            <p className="max-w-xl mt-6 mb-6 text-xl leading-relaxed text-gray-700">{productInfo[0].description}</p>
+                                            <div className="flex gap-4">
                                                 <Button
                                                     onClick={createOrder}
-                                                    className={"w-full px-4 py-3 text-center text-white bg-gray-600 border border-transparent hover:border-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl"}
+                                                    className="flex items-center justify-center w-full px-4 py-3 text-black bg-gray-500 border border-transparent rounded-xl hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring focus:ring-gray-200"
                                                 >
-                                                    Comprar Articulo
+                                                    <Typography className="mr-2">Comprar Articulo</Typography>
                                                 </Button>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
+                            {createOrderMessage && (
+                                <SuccessAlert
+                                    title="Orden Creada Exitosamente"
+                                />
+                            )}
                         </div>
                     </section>
                 )}

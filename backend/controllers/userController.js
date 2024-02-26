@@ -16,6 +16,7 @@ module.exports.getLoginData = asyncHandler(async (req, res) => {
         username: user.username,
         userType: user.userType,
         profileImage: user.profileImage,
+        tradename: user.tradename
       });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -46,5 +47,6 @@ module.exports.localPassport = (req, res) => {
     username: user.username,
     userType: user.userType,
     profileImage: user.profileImage,
+    tradename: user.tradename
   });
 };

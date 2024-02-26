@@ -10,12 +10,14 @@ import {
 } from "@material-tailwind/react";
 import Loader from "../../../../components/Loader";
 import {
-  PRODUCT_DELETE_RESET
+  PRODUCT_DELETE_RESET, PRODUCT_CREATE_RESET, EDIT_PRODUCT_REQUEST
 } from "../../../../constants/productConstans";
 import { findAdviserNameById } from "../../../../actions/helpers";
 import { adminListAdvisers } from "../../../../actions/adviserActions";
 import { getProductList } from "../../../../actions/productActions";
 import Delete from "./Delete";
+import SuccessAlert from '../../../../components/alerts/SuccessAlert'
+import Alert from "../../../../components/alerts/Alert";
 
 export function ProductList() {
 
@@ -27,20 +29,37 @@ export function ProductList() {
     error: errorProducts,
     products,
   } = productList;
+
+  const createProduct = useSelector((state) => state.createProduct);
+  const { message: createProductMessage } = createProduct;
+  
+  const editProduct = useSelector((state) => state.editProduct);
+  const { message: editProductMessage } = editProduct;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const { message: deleteProductMessage } = productDelete;
   
   const adminAdviserList = useSelector((state) => state.adminAdviserList);
   const { advisers } = adminAdviserList;
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
   useEffect(() => {
     dispatch(adminListAdvisers());
     dispatch(getProductList());
+    dispatch({type: PRODUCT_CREATE_RESET});
+    dispatch({type: EDIT_PRODUCT_REQUEST});
   }, [])
+
+  useEffect(() => {
+    if(deleteProductMessage) {
+      dispatch(adminListAdvisers());
+      dispatch(getProductList());
+      dispatch({type: PRODUCT_DELETE_RESET});
+    }
+  }, [deleteProductMessage])
   
   useEffect(() => {
-
     if (id) {
       var link = document.location.href.split("/");
       if (link[link.length - 1] === "eliminar") {
@@ -52,7 +71,6 @@ export function ProductList() {
         type: PRODUCT_DELETE_RESET,
       });
     }
-
   }, [products, id]);
 
   const actionOpenDeleteModal = () => {
@@ -206,6 +224,21 @@ export function ProductList() {
           )}
         </CardBody>
       </Card>
+      {createProductMessage && (
+        <SuccessAlert
+          title={"Producto Creado Exitosamente"}
+        />
+      )}
+      {editProductMessage && (
+        <SuccessAlert
+          title={"Producto Editado Exitosamente"}
+        />
+      )}
+      {deleteProductMessage &&
+        <Alert
+          title={"Producto Eliminado Correctamente"}
+        />
+      }
     </div>
   );
 }

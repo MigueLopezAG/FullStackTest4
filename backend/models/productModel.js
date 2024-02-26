@@ -12,11 +12,10 @@ const productSchema = mongoose.Schema(
         ref: 'User',
         index: true,
     },
-    // image: { 
-    //     url: String, 
-    //     filename: String, 
-    //    // trim: true 
-    // },
+    image: { 
+        url: String, 
+        filename: String
+    },
     category: { 
         type: String, 
         //trim: true 

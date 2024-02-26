@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createProductAction, getProductAction } from "../../../../actions/productActions";
+import { createProductAction, editProductAction, getProductAction } from "../../../../actions/productActions";
 import { getLoginData } from "../../../../actions/userActions";
 import { Input, InputFile, InputSelectAdvisers } from "../../../../components/elements/ProductsInputs";
 
 import Alert from "../../../../components/alerts/Alert";
-import { PRODUCT_CREATE_RESET } from "../../../../constants/productConstans";
+import { PRODUCT_CREATE_RESET, GET_PRODUCT_RESET } from "../../../../constants/productConstans";
 import {
     Button,
 } from "@material-tailwind/react";
@@ -15,16 +15,18 @@ import { useMaterialTailwindController } from "../../../../context";
 export function CreateProduct() {
     const { id } = useParams();
     const isEdit = id ? true : false
-    
+
     const [product, setProduct] = useState({
         name: "",
-        adviser: "",
+        adviserRef: "",
         category: "",
         description: "",
+        price: '',
         base64textString: '',
         imageName: '',
-        image: ''
+        imageUrl: ''
     });
+    const [image, setImage] = useState()
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -41,12 +43,18 @@ export function CreateProduct() {
         message: messageCreateProduct,
     } = createProduct;
 
+    const editProduct = useSelector((state) => state.editProduct);
+    const {
+        loading: loadingEditProduct,
+        error: errorEditProduct,
+        message: messageEditProduct,
+    } = editProduct;
+
     const productDetail = useSelector((state) => state.productDetail);
     const {
         loading: loadingProductDetail,
         error: errorProductDetail,
-        product: productInfo,
-        message: messageProductDetail,
+        product: productInfo
     } = productDetail;
 
     const adminAdviserList = useSelector((state) => state.adminAdviserList);
@@ -71,9 +79,9 @@ export function CreateProduct() {
             reader.readAsDataURL(e);
 
             reader.onload = () => {
+                setImage(e)
                 setProduct((prevState) => ({
                     ...prevState,
-                    image: e,
                     base64textString: reader.result,
                     imageName: e.name
                 }));
@@ -82,15 +90,9 @@ export function CreateProduct() {
             reader.onerror = (error) => {
             console.log('Error: ', error);
             };
-            
-            setProduct((prevState) => ({
-                ...prevState,
-                image: e
-            }))
         } else {
             setProduct((prevState) => ({
                 ...prevState,
-                image: '',
                 base64textString: '',
                 imageName: ''
             }));
@@ -100,18 +102,21 @@ export function CreateProduct() {
     const handleChangeSelect = (e) => {
         setProduct((prevState) => ({
             ...prevState,
-            adviser: e.target.value
+            adviserRef: e.target.value
         }));
     }
 
     const submitHandler = () => {
-        dispatch(createProductAction({ProductInfo: product}));
+        if(isEdit){
+            dispatch(editProductAction(id, product))
+        } else {
+            dispatch(createProductAction(product));
+        }
     };
     const redirect = "/login";
     //Validar la sesion del usuario y controlar la redireccion
     useEffect(() => {
-        if (messageCreateProduct) {
-            dispatch({ type: PRODUCT_CREATE_RESET });
+        if (messageCreateProduct || messageEditProduct) {
             navigate("/admin/Productos");
         }
         if (!userInfo) {
@@ -119,27 +124,49 @@ export function CreateProduct() {
         } else if (userInfo.userType !== "Admin") {
             navigate(redirect);
         }
-    }, [userInfo, messageCreateProduct]);
+    }, [userInfo, messageCreateProduct, messageEditProduct ]);
 
     useEffect(() => {
         if(isEdit){
-        dispatch(getProductAction(id))
-      }
+            dispatch(getProductAction(id))
+        } else {
+            dispatch({ type: GET_PRODUCT_RESET });
+        }
     }, [id])
-    
+ 
     useEffect(() => {
       if(productInfo && isEdit) {
         setProduct({
             name: productInfo[0].name || '',
-            adviser: productInfo[0].adviserRef || '',
+            adviserRef: productInfo[0].adviserRef || '',
+            price: productInfo[0].price || '',
             category: productInfo[0].category || '',
             description: productInfo[0].description ||'',
-            base64textString: '',
-            imageName: productInfo[0].imageName || '',
-            image: ''
+            imageUrl: productInfo[0].image.url ||'',
+            imageName: productInfo[0].image.filename || ''
+        })
+      } else {
+        setProduct({
+            name: '',
+            adviserRef: '',
+            price: '',
+            category: '',
+            description: '',
+            imageUrl: '',
+            imageName: ''
         })
       }
     }, [productInfo])
+    
+    useEffect(() => {
+      if(advisers.length !== 0){
+        setProduct({
+            ...product,
+            adviserRef: advisers[0]._id
+        })
+      }
+    }, [advisers])
+    
     
 
     return (
@@ -163,13 +190,20 @@ export function CreateProduct() {
                     />
                     <InputSelectAdvisers
                         title="Proveedor"
-                        name="adviser"
+                        name="adviserRef"
                         placeholder="Selecciona el proveedor"
                         required={true}
-                        firstValue={advisers[0]}
-                        value={product.adviser}
+                        value={product.adviserRef}
                         setValue={handleChangeSelect}
                         advisers={advisers}
+                    />
+                    <Input
+                        title="Precio"
+                        name="price"
+                        type="number"
+                        required={true}
+                        value={product.price}
+                        setValue={handleChange}
                     />
                     <Input
                         title="Categoria"
@@ -193,14 +227,21 @@ export function CreateProduct() {
                         title="Imagen del Producto"
                         name="image"
                         required={true}
-                        value={product.image}
+                        value={product.imageUrl !== '' ? product.imageUrl: image}
                         setValue={handleImageChange}
+                        url={product.imageUrl}
+                        removeImage={()=>{
+                            setProduct({
+                                ...product,
+                                imageUrl: ''
+                            })
+                        }}
                     />
                 </div>
                 <div className="col-span-full">
                     <div className="col-span-full mt-3 flex justify-center text-center">
-                        {(errorCreateProduct || errorProductDetail) && (
-                            <Alert title="Error" text={(errorCreateProduct || errorProductDetail)} />
+                        {(errorCreateProduct || errorProductDetail || errorEditProduct) && (
+                            <Alert title="Error" text={(errorCreateProduct || errorProductDetail || errorEditProduct)} />
                         )}
                     </div>
                     <div className="col-span-full flex justify-center text-center">
@@ -210,7 +251,7 @@ export function CreateProduct() {
                             className="mt-6 flex justify-center rounded-md p-2 px-4 text-center text-lg font-normal text-white hover:bg-opacity-90"
                             fullWidth
                         >
-                            {(loadingCreateProduct || loadingProductDetail) && (
+                            {(loadingCreateProduct || loadingProductDetail || loadingEditProduct) && (
                                 <img
                                     src="/assets/loader.svg"
                                     className="my-auto mr-3 h-6 w-6"

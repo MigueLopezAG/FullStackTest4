@@ -20,11 +20,11 @@ module.exports.isAdmin = asyncHandler(async (req, res, next) => {
 });
 
 module.exports.isAdviser = asyncHandler(async (req, res, next) => {
-  if (req.user.userType !== "Adviser") {
+  if (req.user.userType === "Adviser" || req.user.userType === "Admin") {
+    next()
+  } else {
     res.status(401);
     throw new Error("You dont have permisison to do this");
-  } else {
-    next();
   }
 });
 

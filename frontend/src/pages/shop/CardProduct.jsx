@@ -10,15 +10,6 @@ const CardProduct = ({ product }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  const [image, setImage] = useState('')
-
-  const getImage = async () => {
-    // axios.get(product.image, { responseType: "arraybuffer" })
-    //   .then((response) =>
-    //     setImage(Buffer.from(response.data, "binary").toString("base64"))
-    //   );
-  }
-  getImage();
 
   const createOrder = (e) => {
     e.stopPropagation();
@@ -30,15 +21,16 @@ const CardProduct = ({ product }) => {
 
   return (
     <div
-      className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl"
+      className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 mx-auto bg-white shadow-lg rounded-xl duration-300 transform hover:scale-105 hover:shadow-xl"
       onClick={() => navigate('/productDetail/' + product._id)}
     >
-      <img src={`data:;base64,${image}`} alt={product.model} className="h-80 w-72 object-cover rounded-t-xl" />
-      <div className="px-4 py-3 w-72">
-        <p className="text-lg font-bold text-black truncate block capitalize">{product.name}</p>
-        <div className="flex items-center">
-          <p className="text-lg font-semibold text-black cursor-auto my-3">${product.price.toFixed(2)}</p>
-          <div className="ml-auto" onClick={createOrder}><BanknotesIcon className='h-7 w-7'/></div>
+      <img src={product.image.url} alt={product.model} className="h-72 w-full object-cover rounded-t-xl" />
+      <div className="px-4 py-3">
+        <p className="text-lg font-bold text-black truncate capitalize">{product.name}</p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-lg font-semibold text-black">${product.price.toFixed(2)}</p>
+          <div className="ml-auto" onClick={createOrder}>
+            <BanknotesIcon className='flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full w-10 h-10 focus:outline-none'/></div>
         </div>
       </div>
     </div>

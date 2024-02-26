@@ -38,9 +38,6 @@ export const createProductAction = (productInfo) => async (dispatch) => {
             type: PRODUCT_CREATE_SUCCESS,
             payload: data,
         });
-        dispatch({
-            type: PRODUCT_CREATE_RESET,
-        });
     } catch (error) {
         dispatch({
             type: PRODUCT_CREATE_FAIL,
@@ -62,7 +59,7 @@ export const editProductAction = (productRef, productInfo) => async (dispatch) =
             "Content-Type": "application/json",
           },
       };
-      const { data } = await axios.post(
+      const { data } = await axios.put(
           "/api/products/" + productRef,
           { productInfo },
           config
@@ -70,10 +67,7 @@ export const editProductAction = (productRef, productInfo) => async (dispatch) =
       dispatch({
           type: EDIT_PRODUCT_SUCCESS,
           payload: data,
-      });
-      dispatch({
-          type: EDIT_PRODUCT_RESET,
-      });
+      })
   } catch (error) {
       dispatch({
           type: EDIT_PRODUCT_FAIL,

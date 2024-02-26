@@ -23,7 +23,22 @@ export const routes = [
   {
     userType: "Adviser",
     layout: "adviser",
-    pages: [],
+    pages: [{
+      icon: <InboxArrowDownIcon {...icon} />,
+      name: "Ordenes",
+      path: "/Ordenes",
+      isList: true,
+      element: <OrderList />,
+      subpages: [
+        {
+          icon: <PencilSquareIcon {...icon} />,
+          name: "Editar",
+          path: "/:id/editar",
+          element: <EditOrder />,
+          hide: true
+        }
+      ]
+    }],
   },
 
   {

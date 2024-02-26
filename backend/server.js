@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
+const fileUpload = require('express-fileupload');
 const colors = require("colors");
 const morgan = require("morgan");
 const passport = require("passport");
@@ -43,8 +44,16 @@ app.use(session(sessionOption));
 //use Mongo Sanitize
 app.use(mongoSanitize());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(
+  fileUpload({
+      limits: {
+          fileSize: 10000000, // Around 10MB
+      },
+      abortOnLimit: true,
+  })
+);
 
 //USe passport
 app.use(passport.initialize());
