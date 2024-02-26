@@ -5,8 +5,10 @@ const User = require("../models/userModel");
 
 dotenv.config();
 
-// PRODUCT
-//PRODUCT CRUD
+// ORDER
+//ORDER CRUD
+//Endpoint para generar el listado de las ordenes, en caso de que el usuario sea un administrador 
+//regresara la lista entersa, si es un proveedor, solo regresara la lista de las ordenes que le pertenecen 
 module.exports.orderList = asyncHandler(async (req, res) => {
     try{
         let orders;
@@ -27,6 +29,7 @@ module.exports.orderList = asyncHandler(async (req, res) => {
     
 })
 
+//Obtener ls informacion de una orden buscada por el ID
 module.exports.getOrder = asyncHandler(async (req, res) => {
     try{
         Order.findById(req.params._id).then((order) =>{
@@ -42,6 +45,7 @@ module.exports.getOrder = asyncHandler(async (req, res) => {
     }
 })
 
+//Endpoint para crear una nueva orden apartir de la referencia del producto y el proveedor
 module.exports.createOrder = asyncHandler(async (req, res) => {
     try{
         const newOrder = new Order({
@@ -56,6 +60,7 @@ module.exports.createOrder = asyncHandler(async (req, res) => {
     }
 });
 
+//Endpoint para eliminar la orden apartir del id
 module.exports.deleteOrder = asyncHandler(async (req, res) => {
     try{
         const order = await Order.findById(req.params._id);
@@ -68,6 +73,7 @@ module.exports.deleteOrder = asyncHandler(async (req, res) => {
     }
 });
 
+//Endpoint para editar la informacion de la orden, primero se valida que exista la orden para poder hacer la actualizacion
 module.exports.editOrder = asyncHandler((req, res) => {
     const { orderInfo } = req.body;
     try{

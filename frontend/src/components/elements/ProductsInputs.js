@@ -3,7 +3,7 @@ import Upload from "../../assets/admin/upload.svg";
 
 import { Link } from "react-router-dom";
 import Modal from "../Modal";
-
+//Se crearon hooks personalizados para los fomularios de las ordenes y los productos
 export const Input = ({
     title,
     type,
@@ -134,7 +134,7 @@ export const InputFile = ({
       </div>
     );
 };
-  
+  //Hook para el select de los proovedores
 export const InputSelectAdvisers = ({
   title,
   type,
@@ -177,6 +177,7 @@ export const InputSelectAdvisers = ({
     </div>
   );
 };  
+//Hook para el select del status de las ordenes
 export const InputSelectStatus = ({
   title,
   type,

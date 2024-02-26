@@ -18,7 +18,7 @@ import {
     EDIT_PRODUCT_RESET,
     EDIT_PRODUCT_FAIL
 } from '../constants/productConstans'
-
+//Acciones de los productos para interactuar con la base de datos y ejecutar los disparadores de los reducers
 export const createProductAction = (productInfo) => async (dispatch) => {
     try{
         dispatch({

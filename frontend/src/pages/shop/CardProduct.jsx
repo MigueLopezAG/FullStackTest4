@@ -10,7 +10,8 @@ const CardProduct = ({ product }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-
+  
+  //Funcion para crear una nueva orden
   const createOrder = (e) => {
     e.stopPropagation();
     dispatch(createOrderAction({

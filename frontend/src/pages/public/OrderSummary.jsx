@@ -6,8 +6,6 @@ import { Typography, Button } from '@material-tailwind/react';
 
 const OrderSummary = () => {
 
-
-
   return (
     <div className="px-6 mb-14">
       <div>

@@ -18,7 +18,7 @@ module.exports.isAdmin = asyncHandler(async (req, res, next) => {
     next();
   }
 });
-
+//Se crea una nueva validacion para validar si el usuario es un proveedor
 module.exports.isAdviser = asyncHandler(async (req, res, next) => {
   if (req.user.userType === "Adviser" || req.user.userType === "Admin") {
     next()

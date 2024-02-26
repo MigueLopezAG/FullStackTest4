@@ -14,6 +14,7 @@ const Shop = () => {
       products,
     } = productList;
 
+    //Ejecucion del disparador para obtener la lista de los productos
     useEffect(() => {
         dispatch(getProductList());
       }, [])
@@ -29,8 +30,6 @@ const Shop = () => {
             ) : (
                 <div className="container mx-auto p-4 content-center">
                     <h1 className="text-3xl font-semibold mb-8 mt-2 text-center">Catálogo de Productos</h1>
-                    {/* {errorMessage && <CustomErrorAlert AlertMessage={errorMessage}  onCancelAlert={()=>{dispatch(clearAlerts())}}/>}
-                    {successMessage && <CustomSuccessAlert AlertMessage={successMessage} onCancelAlert={()=>{dispatch(clearAlerts())}}/>}*/}
                     <ProductCatalog products={products} />
                 </div>
             )}

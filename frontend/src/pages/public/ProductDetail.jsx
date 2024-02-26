@@ -38,6 +38,7 @@ const ProductDetail = () => {
     }
 
     useEffect(() => {
+        //disparador para reiniciar el reducer de la orden creada (muestra de mensaje) y ejecutamos el disparador para obtener la informacion del producto seleccionado
         if (id) {
             dispatch({type: ORDER_CREATE_RESET})
             dispatch(getProductAction(id))

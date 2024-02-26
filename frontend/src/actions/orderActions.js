@@ -18,7 +18,7 @@ import {
     EDIT_ORDER_FAIL,
     EDIT_ORDER_RESET
 } from '../constants/orderConstants'
-
+//Acciones de las ordenes para interactuar con la base de datos y ejecutar los disparadores de los reducers
 export const createOrderAction = (orderInfo) => async (dispatch) => {
     try{
         dispatch({

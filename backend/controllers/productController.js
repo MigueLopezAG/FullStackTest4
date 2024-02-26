@@ -10,6 +10,7 @@ dotenv.config();
 
 // PRODUCT
 //PRODUCT CRUD
+//Endpoint para generar la lista de productos que no aparecen como eliminados
 module.exports.productList = asyncHandler(async (req, res) => {
     try {
         const products = await Product.find({ deleted: false })
@@ -24,6 +25,7 @@ module.exports.productList = asyncHandler(async (req, res) => {
     }
 })
 
+//Endpoint para obtener la informacion de un producto por su ID
 module.exports.getProduct = asyncHandler(async (req, res) => {
     try {
         const product = await Product.find({ _id: req.params._id, deleted: false })
@@ -38,6 +40,8 @@ module.exports.getProduct = asyncHandler(async (req, res) => {
     }
 })
 
+//Endpointa para crear un nuevo producto, primero se crea un nuevo modelo con la informacion recibida
+//Una vez creado el modelo se crea la peticion para cargar la imagen a cloudinary
 module.exports.createProduct = asyncHandler(async (req, res) => {
     const { productInfo } = req.body
         const product = await Product.findOne({ name: productInfo.name })
@@ -68,6 +72,7 @@ module.exports.createProduct = asyncHandler(async (req, res) => {
             }
 });
 
+//Endpoint par eliminar el producto
 module.exports.deleteProduct = asyncHandler(async (req, res) => {
     try {
         const product = await Product.findById(req.params._id);
@@ -80,6 +85,8 @@ module.exports.deleteProduct = asyncHandler(async (req, res) => {
     }
 });
 
+//Endpoint para actualizar la informacion del producto, antes de cargar la imagen 
+//a cloudinary se valida que se haya recibido una imagen, si no se recibe  continua con el flujo
 module.exports.editProduct = asyncHandler(async (req, res) => {
     const {productInfo} = req.body
     console.log("productInfo", productInfo)

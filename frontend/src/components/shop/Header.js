@@ -5,7 +5,7 @@ import { FaUserCircle  } from 'react-icons/fa';
 import '../../styles/Header.css'
 import { useNavigate } from 'react-router-dom';
 const Header= () => {
-  
+  //Header personalizado para la tienda
   const navigate = useNavigate();
   
   return (

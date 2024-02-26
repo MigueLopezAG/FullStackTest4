@@ -11,6 +11,7 @@ const ProductCatalog = ({ products }) => {
   const createOrderInfo = useSelector((state) => state.createOrder);
   const { message } = createOrderInfo;
 
+  //Disparador para reiniciar el mensaje de la orden creada
   useEffect(() => {
     dispatch({type: ORDER_CREATE_RESET})
   }, [])
